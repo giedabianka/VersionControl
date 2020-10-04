@@ -69,12 +69,12 @@ namespace Gieda_Bianka_FYZINS_gyak4
                 "Szobák száma",
                 "Alapterület (m2)",
                 "Ár (mFt)",
-                "Négyzetméter ár (Ft/m2)",
-                "Extra"};
+                "Négyzetméter ár (Ft/m2)"
+                };
 
             for (int i = 0; i < headers.Length; i++)
             {
-                xlSheet.Cells[i+1, 1] = headers[i];
+                xlSheet.Cells[1,i+1] = headers[i];
             }
 
             object[,] values = new object[Flats.Count, headers.Length];
@@ -97,13 +97,32 @@ namespace Gieda_Bianka_FYZINS_gyak4
                 values[counter, 5] = f.NumberOfRooms;
                 values[counter, 6] = f.FloorArea;
                 values[counter, 7] = f.Price;
-                values[counter, 8] = "";
+                values[counter, 8] = Math.Round(f.Price / f.FloorArea,2) ;
                 counter++;
             }
 
             xlSheet.get_Range(
              GetCell(2, 1),
              GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+
+            //fejlec_formazas
+            Excel.Range headerRange = xlSheet.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 40;
+            headerRange.Interior.Color = Color.LightBlue;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+            //tabla_formazas
+            Excel.Range tableRange = xlSheet.get_Range(GetCell(2, 1), GetCell(1 + values.GetLength(0), values.GetLength(1)));
+            tableRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+            xlSheet.get_Range(GetCell(1, 1), GetCell(1+values.GetLength(0), 1)).Font.Bold = true;
+            xlSheet.get_Range(GetCell(2, 1), GetCell(1+values.GetLength(0), 1)).Interior.Color = Color.LightYellow;
+
+            xlSheet.get_Range(GetCell(2, headers.Length), GetCell(1+values.GetLength(0), headers.Length)).Interior.Color = Color.LightGreen;
         }
 
         private string GetCell(int x, int y)
