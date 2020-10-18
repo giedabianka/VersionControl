@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 
 namespace Gieda_Bianka_FYZINS_gyak6
@@ -26,7 +28,7 @@ namespace Gieda_Bianka_FYZINS_gyak6
             First();
             Second();
         }
-
+        public string result;
         public void First()
         {
             var mnbService = new MNBArfolyamServiceSoapClient();
@@ -37,10 +39,10 @@ namespace Gieda_Bianka_FYZINS_gyak6
                 endDate = "2020-06-30"
             };
             var response = mnbService.GetExchangeRates(request);
-            var result = response.GetExchangeRatesResult;
+            result = response.GetExchangeRatesResult;
         }
 
-        private void Second()
+        public void Second()
         {
             var xml = new XmlDocument();
             xml.LoadXml(result);
@@ -64,6 +66,24 @@ namespace Gieda_Bianka_FYZINS_gyak6
                 if (unit != 0)
                     rate.Value = value / unit;
             }
+        }
+        public void Third()
+        {
+            chartRateData.DataSource = Rates;
+
+            var series = chartRateData.Series[0];
+            series.ChartType = SeriesChartType.Line;
+            series.XValueMember = "Date";
+            series.YValueMembers = "Value";
+            series.BorderWidth = 2;
+
+            var legend = chartRateData.Legends[0];
+            legend.Enabled = false;
+
+            var chartArea = chartRateData.ChartAreas[0];
+            chartArea.AxisX.MajorGrid.Enabled = false;
+            chartArea.AxisY.MajorGrid.Enabled = false;
+            chartArea.AxisY.IsStartedFromZero = false;
         }
     }
 }
