@@ -18,11 +18,30 @@ namespace Gieda_Bianka_FYZINS_gyak6
     public partial class Form1 : Form
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
+        BindingList<string> Currencies = new BindingList<string>();
 
         public Form1()
         {
             InitializeComponent();
+            var mnbService = new MNBArfolyamServiceSoapClient();
 
+            var request = new GetCurrenciesRequestBody();
+            var response = mnbService.GetCurrencies(request);
+            var result1 = response.GetCurrenciesResult;
+
+            var xml = new XmlDocument();
+            xml.LoadXml(result1);
+            foreach (XmlElement element in xml.DocumentElement)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Currencies.Add(((XmlElement)element.ChildNodes[i]).InnerText);
+                }
+                    
+            }
+
+            comboBox1.DataSource = Currencies;
+            
             RefreshData();
         }
 
@@ -56,6 +75,8 @@ namespace Gieda_Bianka_FYZINS_gyak6
 
                 // Valuta
                 var childElement = (XmlElement)element.ChildNodes[0];
+                if (childElement == null)
+                    continue;
                 rate.Currency = childElement.GetAttribute("curr");
 
                 // Érték
