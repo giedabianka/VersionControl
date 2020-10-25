@@ -24,31 +24,11 @@ namespace Gieda_Bianka_FYZINS_gyak7
         {
             InitializeComponent();
 
-            Population = GetPopulation(@"C:\Windows\Temp\nép.csv");
-            BirthProbabilities = GetBirthProbabilities(@"C:\Windows\Temp\születés.csv");
-            DeathProbabilities = GetDeathProbabilities(@"C:\Windows\Temp\halál.csv");
-
-            // Végigmegyünk a vizsgált éveken
-            for (int year = 2005; year <= 2024; year++)
-            {
-                // Végigmegyünk az összes személyen
-                for (int i = 0; i < Population.Count; i++)
-                {
-                    SimStep(2024, Population[3]) ;
-                }
-
-                int nbrOfMales = (from x in Population
-                                  where x.Gender == Gender.Male && x.IsAlive
-                                  select x).Count();
-                int nbrOfFemales = (from x in Population
-                                    where x.Gender == Gender.Female && x.IsAlive
-                                    select x).Count();
-                Console.WriteLine(
-                    string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
-            }
+            Population = GetPopulation(@textBox1.Text);
+            BirthProbabilities = GetBirthProbabilities(@textBox1.Text);
+            DeathProbabilities = GetDeathProbabilities(@textBox1.Text);
 
         }
-
 
 
         public List<Person> GetPopulation(string csvpath)
@@ -147,5 +127,42 @@ namespace Gieda_Bianka_FYZINS_gyak7
             }
         }
 
+        private void Simulation()
+        {
+            // Végigmegyünk a vizsgált éveken
+            for (int year = 2005; year <= 2024; year++)
+            {
+                // Végigmegyünk az összes személyen
+                for (int i = 0; i < Population.Count; i++)
+                {
+                    SimStep(year, Population[i]);
+                }
+
+                int nbrOfMales = (from x in Population
+                                  where x.Gender == Gender.Male && x.IsAlive
+                                  select x).Count();
+                int nbrOfFemales = (from x in Population
+                                    where x.Gender == Gender.Female && x.IsAlive
+                                    select x).Count();
+                Console.WriteLine(
+                    string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Simulation();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    textBox1.Text = openFileDialog.FileName;
+                }
+            }
+        }
     }
 }
