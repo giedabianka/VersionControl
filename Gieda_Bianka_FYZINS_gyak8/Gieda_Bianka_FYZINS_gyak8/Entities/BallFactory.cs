@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Gieda_Bianka_FYZINS_gyak8.Entities
 {
-    class IToyFactory : Abstractions.IToyFactory
+    class BallFactory : Abstractions.IToyFactory
     {
-        public Abstractions.Toy CreateNew()
+        public Color BallColor { get; set; }
+
+        public Toy CreateNew()
         {
-            return new Toy();
+            return new Ball(BallColor);
         }
     }
 }
