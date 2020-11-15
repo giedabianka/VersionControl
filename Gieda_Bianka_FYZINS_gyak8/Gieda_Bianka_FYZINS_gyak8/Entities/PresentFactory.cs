@@ -8,5 +8,6 @@ namespace Gieda_Bianka_FYZINS_gyak8.Entities
 {
     class PresentFactory
     {
+
     }
 }
