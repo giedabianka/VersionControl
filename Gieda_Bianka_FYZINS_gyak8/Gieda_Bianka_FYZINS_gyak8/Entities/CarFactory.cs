@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Gieda_Bianka_FYZINS_gyak8.Entities
 {
-    class CarFactory : IToyFactory
+    class CarFactory : Abstractions.IToyFactory
     {
-        public Toy CreateNew()
+        public Abstractions.Toy CreateNew()
         {
             return new Car();
         }
